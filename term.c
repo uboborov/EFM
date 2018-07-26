@@ -20,7 +20,7 @@ static struct termios old, new;
 
 void term_setup(void)
 {
-#ifdef ARCH_ARM
+#if defined(ARCH_ARM) || defined(ARCH_I386)
     tcgetattr(fileno(stdin), &old);
     new = old;
     new.c_cc[VERASE] = 0x7f; //0x08; dml!!!
@@ -30,7 +30,7 @@ void term_setup(void)
 
 void term_set_mode_ncan(void)
 {
-#ifdef ARCH_ARM
+#if defined(ARCH_ARM) || defined(ARCH_I386)
     tcgetattr(fileno(stdin), &old);
     new = old;
     new.c_lflag &= ~ICANON;
@@ -45,13 +45,13 @@ void term_set_mode_ncan(void)
 
 void term_unset_mode_ncan(void)
 {
-#ifdef ARCH_ARM
+#if defined(ARCH_ARM) || defined(ARCH_I386)
     tcsetattr(fileno(stdin), TCSAFLUSH, &old);
 #endif
 }
 
 void term_set_mode_linux_console() {
-#ifdef ARCH_ARM
+#if defined(ARCH_ARM) || defined(ARCH_I386)
     tcgetattr(fileno(stdin), &old);
     new = old;
     new.c_lflag |= ICANON;

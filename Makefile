@@ -1,6 +1,6 @@
 
 
-PATH=$PATH:/usr/local/angstrom/armv7linaro/bin/
+
 APPBIN_PATH ?= ~/
 LIBGCC_PATH = /usr/local/angstrom/armv7linaro/lib/gcc/arm-linux-gnueabihf/4.7.3
 LIBC_PATH   = /usr/local/angstrom/armv7linaro/lib
@@ -9,9 +9,12 @@ ARCH ?= arm
 OS_LINUX = yes
 
 ifeq ($(ARCH),arm)
+PATH=$PATH:/usr/local/angstrom/armv7linaro/bin/
 CROSS_COMPILE = arm-linux-gnueabihf-
+DEFS=-DARCH_ARM
 else
-CROSS_COMPILE = x86_64-pc-linux-gnu-
+CROSS_COMPILE:=
+DEFS=-DARCH_I386
 endif
 
 CC = $(CROSS_COMPILE)gcc
@@ -27,7 +30,7 @@ MKFILE = Makefile
 SRC = dav.c EFM.c efm_c.c cport.c
 
 ifeq ($(OS_LINUX),yes)
-DEFS = -DOS_LINUX -DARCH_ARM
+DEFS += -DOS_LINUX
 SRC += term.c
 endif
 
@@ -56,12 +59,12 @@ target: all
 
 all: $(OBJS) $(MAKEFILE)
 	$(CC) $(OBJS) -o efm $(LDFLAGS)
-	-$(CP) efm $(APPBIN_PATH)
+#	-$(CP) efm $(APPBIN_PATH)
 	
 %.d: %.c $(MKFILE)
 	@echo "Building dependencies for '$<'"
-	@$(CC) -E -MM -MQ $(<:.c=.o) $(CPFLAGS) $< -o $@
-	@$(DEL) $(<:.c=.o)
+	$(CC) -E -MM -MQ $(<:.c=.o) $(CPFLAGS) $< -o $@
+	$(DEL) $(<:.c=.o)
 
 %.o: %.c $(MKFILE)
 	@echo "Compiling '$<'"

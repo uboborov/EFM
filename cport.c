@@ -158,31 +158,37 @@ int cprintf(const char *fmt, ...) {
 
 static int    com_fd;
 int open_cport(int port) {
+#if !defined(ARCH_I386)    
     char buf[50];
     sprintf(buf, "/dev/ttyS%d", port);
     freopen(buf, "r", stdin);
     freopen(buf, "w", stdout);
     freopen(buf, "w", stderr);
-
+   
     com_fd = open(buf, O_RDWR);                          // Opening serial port asynchronously
 
     if (com_fd == -1) {
         return 1;
     }
-  
+#endif   
     return 0;
 }
 
 int close_port() {
+#if !defined(ARCH_I386)     
     return close(com_fd);
-    
+#else
+    return 0;
+#endif    
 }
 
 int set_cport_br(int br) {
+#if !defined(ARCH_I386)     
     struct termios options;
     tcgetattr(com_fd, &options);            //dml: remove this?
     cfsetispeed(&options, br);       //dml: remove this?
     tcsetattr(com_fd,  TCSANOW, &options);  //dml: remove this?
+#endif    
     return 0;
 }
 

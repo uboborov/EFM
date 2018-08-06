@@ -37,6 +37,7 @@ typedef int (*win_callback_t)(void *arg);
 
 #define BTN_CTRL_N      0x0E
 #define BTN_CTRL_Q      0x11
+#define BTN_CTRL_W      0x17
 
 #define BTN_F1          0x05
 #define BTN_F2          0x06

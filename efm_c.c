@@ -3200,12 +3200,13 @@ void efm_task(void *parg) {
                 operation = OP_NONE;
                 active_win = NULL;
             }
-        } else if (ch == BTN_CTRL_Q) {
+        } else if (ch == BTN_CTRL_Q || ch == BTN_CTRL_W) {
             // exit from file manager
             if ((active_win == NULL) && operation == OP_NONE) {
                 win_clear_screen(pwindow);
                 win_remove_en_win(pwindow);
                 set_term_colsize(80);
+                term_unset_mode_ncan();
 #ifdef CONFIG_EMBEDDED
                 OSTaskDel(OS_PRIO_SELF);
                 while (1) {
@@ -3225,14 +3226,14 @@ void efm_task(void *parg) {
                     nwin = new_window();
                     win_remove_cur_selection(pwindow);
                     win_create_help_win(nwin,
-                                        "F1     - Help\n"
-                                        "F2     - Nothing\n"
-                                        "F3     - Edit\n"
-                                        "F4     - Copy item under cursor\n"
-                                        "DEL    - Delete item under cursor\n"
-                                        "Ctrl+N - Create directory or file\n"""
-                                        "         (depends on \'.\' in the name)\n"
-                                        "Ctrl+Q - Exit\n", pwindow);
+                                        "F1       - Help\n"
+                                        "F2       - Nothing\n"
+                                        "F3       - Edit\n"
+                                        "F4       - Copy item under cursor\n"
+                                        "DEL      - Delete item under cursor\n"
+                                        "Ctrl+N   - Create directory or file\n"""
+                                        "          (depends on \'.\' in the name)\n"
+                                        "Ctrl+Q/W - Exit\n", pwindow);
                     win_clear_region(nwin);
                     win_draw_main_win(nwin);
                     win_draw_shadow(nwin);
